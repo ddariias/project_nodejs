@@ -17,7 +17,16 @@ class AuthController {
     try {
       const param = req.res.locals.tokenId as string;
       await authService.logout(param);
-      res.status(200);
+      res.status(200).json();
+    } catch (e) {
+      next(e);
+    }
+  }
+  public async logoutAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const param = req.res.locals.userId as string;
+      await authService.logoutAll(param);
+      res.status(200).json();
     } catch (e) {
       next(e);
     }

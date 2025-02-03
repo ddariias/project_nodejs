@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import {NextFunction, Request, Response} from "express";
 
-import { ApiError } from "../errors/api.error";
-import { tokenRepository } from "../repositories/token.repository";
+import {ApiError} from "../errors/api.error";
+import {tokenRepository} from "../repositories/token.repository";
 
 class AuthMiddleware {
   public authDataValid(validator) {
@@ -32,7 +32,9 @@ class AuthMiddleware {
       if (!pair) {
         throw new ApiError("No token pair", 401);
       }
+
       req.res.locals.tokenId = pair._id;
+      req.res.locals.userId = pair._userId;
       next();
     } catch (e) {
       next(e);

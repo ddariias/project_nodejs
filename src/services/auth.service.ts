@@ -32,6 +32,9 @@ class AuthService {
   public async logout(param: string): Promise<void> {
     await authRepository.logout({ _id: param });
   }
+  public async logoutAll(param: string): Promise<void> {
+    await authRepository.logoutAll({ _userId: param });
+  }
 }
 
 export const authService = new AuthService();

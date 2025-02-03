@@ -10,6 +10,9 @@ class AuthRepository {
   public async logout(param: Partial<IToken>): Promise<void> {
     await Token.deleteOne(param);
   }
+  public async logoutAll(param: Partial<IToken>): Promise<void> {
+    await Token.deleteMany(param);
+  }
 }
 
 export const authRepository = new AuthRepository();

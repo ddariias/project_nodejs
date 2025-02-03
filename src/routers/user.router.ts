@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { userController } from "../controllers/user.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
 import { userMiddleware } from "../middlewares/user.middleware";
 import { UserValidator } from "../validator/user.validator";
 
@@ -10,6 +11,12 @@ router.post(
   "/register",
   userMiddleware.isBodyValid(UserValidator.register),
   userController.register,
+);
+router.delete(
+  "/me",
+  userMiddleware.isBodyValid(UserValidator.signIn),
+  authMiddleware.checkAccessToken,
+  userController.delete,
 );
 
 export const userRouter = router;
