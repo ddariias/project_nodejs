@@ -1,0 +1,43 @@
+import { NextFunction, Request, Response } from "express";
+
+import { ApiError } from "../errors/api.error";
+import { tokenRepository } from "../repositories/token.repository";
+
+class AuthMiddleware {
+  public authDataValid(validator) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        req.body = await validator.validateAsync(req.body);
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+  public async checkAccessToken(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const header = req.headers.authorization;
+      if (!header) {
+        throw new ApiError("No token provider", 401);
+      }
+      const accessToken = header.split("Bearer ")[1];
+      if (!accessToken) {
+        throw new ApiError("No token provider", 401);
+      }
+      const pair = await tokenRepository.findByParam({ accessToken });
+      if (!pair) {
+        throw new ApiError("No token pair", 401);
+      }
+      req.res.locals.tokenId = pair._id;
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+}
+
+export const authMiddleware = new AuthMiddleware();
