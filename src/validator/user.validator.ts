@@ -21,6 +21,8 @@ export class UserValidator {
   public static queryValidator = joi.object({
     limit: joi.number().min(1).max(15).default(5),
     page: joi.number().min(1).default(1),
-    searchByFilter: joi.string(),
+  });
+  public static querySearchValidator = joi.object({
+    search: joi.string(),
   });
 }

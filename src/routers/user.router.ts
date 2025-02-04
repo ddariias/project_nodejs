@@ -13,7 +13,6 @@ router.get(
   userMiddleware.isQueryValid(UserValidator.queryValidator),
   userController.getAllUsers,
 );
-
 router.post(
   "/register",
   userMiddleware.isBodyValid(UserValidator.register),
@@ -26,5 +25,11 @@ router.delete(
   userController.delete,
 );
 router.put("/me", authMiddleware.checkAccessToken, userController.update);
+router.get(
+  "/search",
+  authMiddleware.checkAccessToken,
+  userMiddleware.isQuerySearchValid(UserValidator.querySearchValidator),
+  userController.searchByParams,
+);
 
 export const userRouter = router;

@@ -23,6 +23,16 @@ class UserMiddleware {
       }
     };
   }
+  public isQuerySearchValid(validator) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        req.query = await validator.validateAsync(req.query);
+        next();
+      } catch (e) {
+        next(new ApiError("The data is not valid", 400));
+      }
+    };
+  }
 }
 
 export const userMiddleware = new UserMiddleware();

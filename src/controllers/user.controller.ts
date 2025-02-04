@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
+import { IQuery, IQuerySearch } from "../interfaces/user.interface";
 import { userService } from "../services/user.service";
-import {IQuery} from "../interfaces/user.interface";
 
 class UserController {
   public async register(req: Request, res: Response, next: NextFunction) {
@@ -29,6 +29,11 @@ class UserController {
   public async getAllUsers(req: Request, res: Response, next: NextFunction) {
     const query = req.query as unknown as IQuery;
     const result = await userService.getAllUsers(query);
+    res.status(200).json(result);
+  }
+  public async searchByParams(req: Request, res: Response, next: NextFunction) {
+    const query = req.query as unknown as IQuerySearch;
+    const result = await userService.searchByParams(query);
     res.status(200).json(result);
   }
 }

@@ -21,5 +21,7 @@ export interface IResponsePayload {
 export interface IQuery {
   limit: number;
   page: number;
-  searchByFilter?: string;
+}
+export interface IQuerySearch {
+  search: string;
 }
