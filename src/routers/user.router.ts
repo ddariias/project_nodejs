@@ -18,5 +18,6 @@ router.delete(
   authMiddleware.checkAccessToken,
   userController.delete,
 );
+router.put("/me", authMiddleware.checkAccessToken, userController.update);
 
 export const userRouter = router;

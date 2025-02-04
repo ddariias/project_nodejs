@@ -18,6 +18,13 @@ class UserController {
     await userService.delete(userId, user);
     res.status(200).json();
   }
+
+  public async update(req: Request, res: Response, next: NextFunction) {
+    const userId = req.res.locals.userId;
+    const user = req.body;
+    const result = await userService.update(userId, user);
+    res.status(201).json(result);
+  }
 }
 
 export const userController = new UserController();

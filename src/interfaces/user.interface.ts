@@ -1,3 +1,5 @@
+import { TokenPair } from "./token.interface";
+
 export interface IUser {
   _id: string;
   name?: string;
@@ -10,3 +12,8 @@ export interface IUser {
 
 export type IUserRegister = Pick<IUser, "name" | "email" | "password" | "age">;
 export type BodyOnSignIn = Pick<IUser, "email" | "password">;
+
+export interface IResponsePayload {
+  user: IUser;
+  tokens: TokenPair;
+}

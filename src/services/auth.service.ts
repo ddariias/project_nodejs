@@ -1,15 +1,12 @@
 import { ApiError } from "../errors/api.error";
-import { TokenPair } from "../interfaces/token.interface";
-import { BodyOnSignIn, IUser } from "../interfaces/user.interface";
+import { BodyOnSignIn, IResponsePayload } from "../interfaces/user.interface";
 import { authRepository } from "../repositories/auth.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 
 class AuthService {
-  public async signIn(
-    body: BodyOnSignIn,
-  ): Promise<{ user: IUser; tokens: TokenPair }> {
+  public async signIn(body: BodyOnSignIn): Promise<IResponsePayload> {
     const user = await authRepository.findByEmail(body.email);
     if (!user) {
       throw new ApiError("Incorrect email or password", 401);
