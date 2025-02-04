@@ -17,3 +17,9 @@ export interface IResponsePayload {
   user: IUser;
   tokens: TokenPair;
 }
+
+export interface IQuery {
+  limit: number;
+  page: number;
+  searchByFilter?: string;
+}

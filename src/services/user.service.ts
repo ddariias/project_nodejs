@@ -1,6 +1,7 @@
 import { ApiError } from "../errors/api.error";
 import {
   BodyOnSignIn,
+  IQuery,
   IResponsePayload,
   IUser,
   IUserRegister,
@@ -36,21 +37,31 @@ class UserService {
     }
   }
   public async update(
-    userId: any,
+    userId: string,
     dto: Partial<IUser>,
   ): Promise<IResponsePayload> {
     const userById = await userRepository.findById(userId);
     if (!userById) {
       throw new ApiError("User not found", 401);
     }
+    let passwordUpdate: string;
+    if (dto.password) {
+      passwordUpdate = await passwordService.hashPassword(dto.password);
+    }
     await authRepository.logoutAll({ _userId: userId });
-    const user = await userRepository.update(userById, { ...dto });
+    const user = await userRepository.update(userId, {
+      ...dto,
+      password: passwordUpdate,
+    });
     const tokens = await tokenService.createToken({
       userId: userId,
       email: user.email,
     });
     tokenRepository.createToken({ ...tokens, _userId: user._id });
     return { user, tokens };
+  }
+  public async getAllUsers(query: IQuery): Promise<IUser[]> {
+    return await userRepository.getAllUsers(query);
   }
 }
 export const userService = new UserService();

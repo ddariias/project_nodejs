@@ -1,4 +1,4 @@
-import { IUser, IUserRegister } from "../interfaces/user.interface";
+import { IQuery, IUser, IUserRegister } from "../interfaces/user.interface";
 import { User } from "../models/user.model";
 
 class UserRepository {
@@ -11,8 +11,12 @@ class UserRepository {
   public async findById(userId: string): Promise<IUser> {
     return await User.findById(userId);
   }
-  public async update(userId, dto: Partial<IUser>): Promise<IUser> {
+  public async update(userId: string, dto: Partial<IUser>): Promise<IUser> {
     return await User.findByIdAndUpdate(userId, dto, { new: true });
+  }
+  public async getAllUsers(query: IQuery): Promise<IUser[]> {
+    const skip = query.limit * (query.page - 1);
+    return await User.find().limit(query.limit).skip(skip);
   }
 }
 export const userRepository = new UserRepository();

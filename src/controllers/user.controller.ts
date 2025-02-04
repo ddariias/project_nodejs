@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { userService } from "../services/user.service";
+import {IQuery} from "../interfaces/user.interface";
 
 class UserController {
   public async register(req: Request, res: Response, next: NextFunction) {
@@ -24,6 +25,11 @@ class UserController {
     const user = req.body;
     const result = await userService.update(userId, user);
     res.status(201).json(result);
+  }
+  public async getAllUsers(req: Request, res: Response, next: NextFunction) {
+    const query = req.query as unknown as IQuery;
+    const result = await userService.getAllUsers(query);
+    res.status(200).json(result);
   }
 }
 

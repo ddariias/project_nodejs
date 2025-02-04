@@ -7,6 +7,13 @@ import { UserValidator } from "../validator/user.validator";
 
 const router = Router();
 
+router.get(
+  "/",
+  authMiddleware.checkAccessToken,
+  userMiddleware.isQueryValid(UserValidator.queryValidator),
+  userController.getAllUsers,
+);
+
 router.post(
   "/register",
   userMiddleware.isBodyValid(UserValidator.register),
