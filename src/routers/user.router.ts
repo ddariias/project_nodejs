@@ -31,5 +31,10 @@ router.get(
   userMiddleware.isQuerySearchValid(UserValidator.querySearchValidator),
   userController.searchByParams,
 );
+router.get(
+  "/filter",
+  userMiddleware.isQueryFilterValid(UserValidator.queryFilterValidator),
+  userController.filter,
+);
 
 export const userRouter = router;

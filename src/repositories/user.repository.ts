@@ -4,6 +4,7 @@ import * as mongoose from "mongoose";
 import { ApiError } from "../errors/api.error";
 import {
   IQuery,
+  IQueryFilterDto,
   IQuerySearch,
   IUser,
   IUserRegister,
@@ -43,6 +44,29 @@ class UserRepository {
       throw new ApiError("User not found", 401);
     }
     return user;
+  }
+  public async filter(query: IQueryFilterDto): Promise<IUser[]> {
+    const filterObj: FilterQuery<IUser> = {};
+    if (!query) {
+      throw new ApiError("Query is empty", 400);
+    }
+    if (query.name) {
+      filterObj.name = { $regex: query.name, $options: "i" };
+    }
+    if (query.age) {
+      filterObj.age = query.age;
+    }
+    if (query.createdAt) {
+      const start = new Date(query.createdAt);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(query.createdAt);
+      end.setHours(23, 59, 59, 999);
+      filterObj.createdAt = { $gte: start, $lte: end };
+    }
+    if (query.email) {
+      filterObj.email = { $regex: query.email, $options: "i" };
+    }
+    return await User.find(filterObj);
   }
 }
 export const userRepository = new UserRepository();

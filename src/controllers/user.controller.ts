@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-
-import { IQuery, IQuerySearch } from "../interfaces/user.interface";
+import {
+  IQuery,
+  IQueryFilterDto,
+  IQuerySearch,
+} from "../interfaces/user.interface";
 import { userService } from "../services/user.service";
 
 class UserController {
@@ -34,6 +37,11 @@ class UserController {
   public async searchByParams(req: Request, res: Response, next: NextFunction) {
     const query = req.query as unknown as IQuerySearch;
     const result = await userService.searchByParams(query);
+    res.status(200).json(result);
+  }
+  public async filter(req: Request, res: Response, next: NextFunction) {
+    const query = req.query.filter as unknown as IQueryFilterDto;
+    const result = await userService.filter(query);
     res.status(200).json(result);
   }
 }

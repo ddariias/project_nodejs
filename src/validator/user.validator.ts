@@ -7,6 +7,7 @@ export class UserValidator {
   private static email = joi.string().regex(regexConstant.EMAIL);
   private static age = joi.number().min(18).max(99);
   private static password = joi.string().regex(regexConstant.PASSWORD);
+  private static createdAt = joi.date();
 
   public static register = joi.object({
     name: this.name,
@@ -24,5 +25,13 @@ export class UserValidator {
   });
   public static querySearchValidator = joi.object({
     search: joi.string(),
+  });
+  public static queryFilterValidator = joi.object({
+    filter: joi.object({
+      name: joi.string().optional().allow(null),
+      email: joi.string().optional(),
+      age: this.age.optional(),
+      createdAt: this.createdAt.optional(),
+    }),
   });
 }

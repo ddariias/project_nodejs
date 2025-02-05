@@ -1,7 +1,7 @@
 import { ApiError } from "../errors/api.error";
 import {
   BodyOnSignIn,
-  IQuery, IQuerySearch,
+  IQuery, IQueryFilterDto, IQuerySearch,
   IResponsePayload,
   IUser,
   IUserRegister,
@@ -65,6 +65,9 @@ class UserService {
   }
   public async searchByParams(query: IQuerySearch): Promise<IUser> {
     return await userRepository.searchByParams(query);
+  }
+  public async filter(query: IQueryFilterDto): Promise<IUser[]> {
+    return await userRepository.filter(query);
   }
 }
 export const userService = new UserService();

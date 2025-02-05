@@ -25,3 +25,12 @@ export interface IQuery {
 export interface IQuerySearch {
   search: string;
 }
+export interface IQueryFilterDto {
+  name?: string;
+  email?: string;
+  age?: number;
+  createdAt?: Date;
+}
+export interface IQueryFilter {
+  filter: IQueryFilterDto;
+}
