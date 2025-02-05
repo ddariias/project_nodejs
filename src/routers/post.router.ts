@@ -10,8 +10,14 @@ const router = Router();
 router.post(
   "/",
   authMiddleware.checkAccessToken,
-  postMiddleware.isPostBodyValid(PostValidator.createPost),
+  postMiddleware.isPostBodyValid(PostValidator.bodyValidatePost),
   postController.create,
+);
+router.put(
+  "/",
+  authMiddleware.checkAccessToken,
+  postMiddleware.isPostBodyValid(PostValidator.bodyValidatePost),
+  postController.update,
 );
 
 export const postRouter = router;
