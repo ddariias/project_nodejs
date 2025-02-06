@@ -7,11 +7,15 @@ class PostRepository {
   public async create(body: PostBody, userId: string): Promise<IPost> {
     return await Post.create({ ...body, _userId: userId });
   }
-  public async getByUserId(userId: string): Promise<IPost> {
-    return await Post.findOne({ _userId: new mongoose.Types.ObjectId(userId) });
+  public async getByPostId(postId: string): Promise<IPost> {
+    return await Post.findById(postId);
   }
-  public async update(body: PostBody, userId: string): Promise<IPost> {
-    return await Post.findByIdAndUpdate(userId, body);
+  public async update(body: PostBody, postId: string): Promise<IPost> {
+    return await Post.findByIdAndUpdate(postId, body, { new: true });
+  }
+  public async getPostsByUserId(userId: string): Promise<IPost[]> {
+    const userIdObj = new mongoose.Types.ObjectId(userId);
+    return await Post.find({ _userId: userIdObj });
   }
 }
 export const postRepository = new PostRepository();

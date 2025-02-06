@@ -6,12 +6,22 @@ class PostService {
   public async create(body: PostBody, userId: string): Promise<IPost> {
     return await postRepository.create(body, userId);
   }
-  public async update(body: PostBody, userId: string): Promise<IPost> {
-    const post = await postRepository.getByUserId(userId);
+  public async update(
+    body: PostBody,
+    userId: string,
+    postId: string,
+  ): Promise<IPost> {
+    const post = await postRepository.getByPostId(postId);
     if (!post) {
-      throw new ApiError("Post does not exist", 401);
+      throw new ApiError("Post does not exist", 404);
     }
-    return await postRepository.update(body, userId);
+    if (String(post._userId) !== String(userId)) {
+      throw new ApiError("Invalid user data", 403);
+    }
+    return await postRepository.update(body, postId);
+  }
+  public async getPostsByUserId(userId: string): Promise<IPost[]> {
+    return await postRepository.getPostsByUserId(userId);
   }
 }
 export const postService = new PostService();

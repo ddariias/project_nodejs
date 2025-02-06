@@ -12,8 +12,18 @@ class PostController {
   public async update(req: Request, res: Response, next: NextFunction) {
     const userId = req.res.locals.userId;
     const body = req.body;
-    const post = postService.update(body, userId);
+    const postId = req.params.postId;
+    const post = await postService.update(body, userId, postId);
     res.status(200).json(post);
+  }
+  public async getPostsByUserId(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const userId = req.params.userId;
+    const posts = await postService.getPostsByUserId(userId);
+    res.status(200).json(posts);
   }
 }
 export const postController = new PostController();

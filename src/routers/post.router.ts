@@ -7,6 +7,11 @@ import { PostValidator } from "../validator/post.validator";
 
 const router = Router();
 
+router.get(
+  "/:userId",
+  postMiddleware.isPostIdValid("userId"),
+  postController.getPostsByUserId,
+);
 router.post(
   "/",
   authMiddleware.checkAccessToken,
@@ -14,10 +19,12 @@ router.post(
   postController.create,
 );
 router.put(
-  "/",
+  "/:postId",
+  postMiddleware.isPostIdValid("postId"),
   authMiddleware.checkAccessToken,
   postMiddleware.isPostBodyValid(PostValidator.bodyValidatePost),
   postController.update,
 );
+router.delete("/");
 
 export const postRouter = router;
