@@ -17,5 +17,8 @@ class PostRepository {
     const userIdObj = new mongoose.Types.ObjectId(userId);
     return await Post.find({ _userId: userIdObj });
   }
+  public async deleteById(postId: string): Promise<void> {
+    await Post.findByIdAndDelete(postId);
+  }
 }
 export const postRepository = new PostRepository();

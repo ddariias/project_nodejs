@@ -25,5 +25,11 @@ class PostController {
     const posts = await postService.getPostsByUserId(userId);
     res.status(200).json(posts);
   }
+  public async deleteById(req: Request, res: Response, next: NextFunction) {
+    const postId = req.params.postId;
+    const userId = req.res.locals.userId;
+    await postService.deleteById(postId, userId);
+    res.status(200).json();
+  }
 }
 export const postController = new PostController();

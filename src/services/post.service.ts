@@ -23,5 +23,15 @@ class PostService {
   public async getPostsByUserId(userId: string): Promise<IPost[]> {
     return await postRepository.getPostsByUserId(userId);
   }
+  public async deleteById(postId: string, userId: string): Promise<void> {
+    const post = await postRepository.getByPostId(postId);
+    if (!post) {
+      throw new ApiError("Post does not exist", 404);
+    }
+    if (String(post._userId) !== String(userId)) {
+      throw new ApiError("Invalid user data", 403);
+    }
+    await postRepository.deleteById(postId);
+  }
 }
 export const postService = new PostService();

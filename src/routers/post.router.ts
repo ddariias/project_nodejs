@@ -25,6 +25,11 @@ router.put(
   postMiddleware.isPostBodyValid(PostValidator.bodyValidatePost),
   postController.update,
 );
-router.delete("/");
+router.delete(
+  "/:postId",
+  postMiddleware.isPostIdValid("postId"),
+  authMiddleware.checkAccessToken,
+  postController.deleteById,
+);
 
 export const postRouter = router;

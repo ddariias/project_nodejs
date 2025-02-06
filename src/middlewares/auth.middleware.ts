@@ -1,7 +1,7 @@
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 
-import {ApiError} from "../errors/api.error";
-import {tokenRepository} from "../repositories/token.repository";
+import { ApiError } from "../errors/api.error";
+import { tokenRepository } from "../repositories/token.repository";
 
 class AuthMiddleware {
   public authDataValid(validator) {
