@@ -22,15 +22,15 @@ class AuthMiddleware {
     try {
       const header = req.headers.authorization;
       if (!header) {
-        throw new ApiError("No token provider", 401);
+        throw new ApiError("No token provider", 403);
       }
       const accessToken = header.split("Bearer ")[1];
       if (!accessToken) {
-        throw new ApiError("No token provider", 401);
+        throw new ApiError("No token provider", 403);
       }
       const pair = await tokenRepository.findByParam({ accessToken });
       if (!pair) {
-        throw new ApiError("No token pair", 401);
+        throw new ApiError("No token pair", 403);
       }
 
       req.res.locals.tokenId = pair._id;

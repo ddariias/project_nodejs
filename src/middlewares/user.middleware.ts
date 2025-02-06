@@ -39,7 +39,7 @@ class UserMiddleware {
         if (typeof req.query.filter === "string") {
           req.query.filter = JSON.parse(req.query.filter);
         } else {
-          throw new ApiError("The filter must be object", 400);
+          throw new ApiError("The filter must be string", 400);
         }
         req.query = await validator.validateAsync(req.query);
         next();

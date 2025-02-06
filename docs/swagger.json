@@ -1,0 +1,655 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a REST API for users and posts.",
+    "version": "1.0.7",
+    "title": "The API",
+    "contact": {
+      "email": "myemail@gmail.com"
+    }
+  },
+  "host": "0.0.0.0:3000",
+  "tags": [
+    {
+      "name": "users",
+      "description": "Operations about user"
+    },
+    {
+      "name": "auth",
+      "description": "Operations about auth"
+    },
+    {
+      "name": "posts",
+      "description": "Operations with user posts"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get all users",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "getAllUsers",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "403": {
+            "description": "Invalid token or not token pair"
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update my user account",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateMe",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "email",
+            "description": "New name"
+          },
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "password",
+            "description": "New password"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "403": {
+            "description": "Invalid token or not token pair"
+          },
+          "401": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Delete my user account",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteMe",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "email",
+            "description": "The user with this email will be deleted"
+          },
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "password",
+            "description": "The user with this password will be deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "403": {
+            "description": "Invalid token or not token pair"
+          },
+          "401": {
+            "description": "User not found && Invalid email or password"
+          },
+          "400": {
+            "description": "The data is not valid"
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Register user account",
+        "description": "This can create user.",
+        "operationId": "registerUser",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "email",
+            "description": "A user with this email will be created"
+          },
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "password",
+            "description": "A user with this password will be created"
+          },
+          {
+            "in": "path",
+            "required": false,
+            "type": "string",
+            "name": "name",
+            "description": "A user with this name will be created"
+          },
+          {
+            "in": "path",
+            "required": false,
+            "type": "string",
+            "name": "age",
+            "description": "A user with this age will be created"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "400": {
+            "description": "The data is not valid"
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Search users by params",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "searchByParams",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "name": "search",
+            "description": "The user with this search param (id or email) will be founded"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "400": {
+            "description": "The data is not valid OR Search parameter is missing"
+          },
+          "401": {
+            "description": "User not found"
+          },
+          "403": {
+            "description": "Invalid token or not token pair"
+          }
+        }
+      }
+    },
+    "/filter": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Filter users by params",
+        "description": "This can filter users by params.",
+        "operationId": "filterByParams",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "name": "filter",
+            "description": "The user with this filter param will be founded"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "400": {
+            "description": "The data is not valid OR The filter must be string"
+          }
+        }
+      }
+    },
+    "/sign-in": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Sign in user",
+        "operationId": "signInUser",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "email",
+            "description": "The user with this email will be authorized"
+          },
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "password",
+            "description": "The user with this password will be authorized"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserResponseWithTokens"
+            }
+          },
+          "401": {
+            "description": "Incorrect email or password"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logout user",
+        "description": "This can logout user.",
+        "operationId": "logoutUsers",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "401": {
+            "description": "Invalid token or not token pair"
+          },
+          "403": {
+            "description": "Invalid token or not token pair"
+          }
+        }
+      }
+    },
+    "/logoutAll": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logout all user",
+        "description": "This can logout all user.",
+        "operationId": "logoutAllUsers",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "403": {
+            "description": "Invalid token or not token pair"
+          }
+        }
+      }
+
+    },
+    "/posts": {
+      "post": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Create post",
+        "description": "This can create post.",
+        "operationId": "createPost",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "title",
+            "description": "A post with this title will be created"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/PostResponse"
+            }
+          },
+          "403": {
+            "description": "Invalid token or not token pair"
+          }
+        }
+      }
+    },
+    "/posts/{postId}:": {
+      "put": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Update by postId",
+        "description": "This can update post.",
+        "operationId": "updatePost",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "title",
+            "description": "A post with this title will be updated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/PostResponse"
+            }
+          },
+          "403": {
+            "description": "Invalid token or not token pair && Invalid user data"
+          },
+          "404": {
+            "description": "Invalid id && Post does not exist"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Delete by postId",
+        "description": "This can delete post.",
+        "operationId": "deletePost",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "403": {
+            "description": "Invalid token or not token pair && Invalid user data"
+          },
+          "404": {
+            "description": "Invalid id && Post does not exist"
+          }
+        }
+      }
+    },
+    "/posts/{userId}:": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Get posts by userId",
+        "description": "This can get post by userId.",
+        "operationId": "getPosts",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "userId",
+            "description": "A post with this userId will be founded"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/PostResponse"
+            }
+          },
+          "404": {
+            "description": "Invalid id && Post does not exist"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "definitions": {
+    "UserResponse": {
+      "type": "object",
+      "required": [
+        "_id",
+        "email",
+        "password",
+        "createAt",
+        "updateAt"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique identifier for a user"
+        },
+        "name": {
+          "type": "string",
+          "default": null
+        },
+        "email": {
+          "type": "string"
+        },
+        "age": {
+          "type": "number",
+          "default": 18
+        },
+        "password": {
+          "type": "string"
+        },
+        "createAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updateAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "UserResponseWithTokens": {
+      "type": "object",
+      "required": [
+        "_id",
+        "email",
+        "password",
+        "createAt",
+        "updateAt"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique identifier for a user"
+        },
+        "name": {
+          "type": "string",
+          "default": null
+        },
+        "email": {
+          "type": "string"
+        },
+        "age": {
+          "type": "number",
+          "default": 18
+        },
+        "password": {
+          "type": "string"
+        },
+        "createAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updateAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "accessToken": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
+    "PostResponse": {
+      "type": "object",
+      "required": [
+        "_id",
+        "title",
+        "createAt",
+        "updateAt"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique identifier for a user"
+        },
+        "title": {
+          "type": "string"
+        },
+        "_userId": {
+          "type": "string"
+        },
+        "createAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updateAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+  }
