@@ -199,7 +199,7 @@
           "200": {
             "description": "Successful operation",
             "schema": {
-              "$ref": "#/definitions/UserResponse"
+              "$ref": "#/definitions/UserShotResponse"
             }
           },
           "400": {
@@ -571,6 +571,38 @@
           "format": "date-time"
         },
         "updateAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "UserShotResponse": {
+      "type": "object",
+      "required": [
+        "_id",
+        "email",
+        "password",
+        "createAt",
+        "updateAt"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique identifier for a user"
+        },
+        "name": {
+          "type": "string",
+          "default": null
+        },
+        "email": {
+          "type": "string"
+        },
+        "age": {
+          "type": "number",
+          "default": 18
+        },
+        "createAt": {
           "type": "string",
           "format": "date-time"
         }

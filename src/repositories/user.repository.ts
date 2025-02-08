@@ -1,6 +1,7 @@
 import { FilterQuery } from "mongoose";
 import * as mongoose from "mongoose";
 
+import { regexConstant } from "../constants/regex.constant";
 import { ApiError } from "../errors/api.error";
 import {
   IQuery,
@@ -24,9 +25,15 @@ class UserRepository {
   public async update(userId: string, dto: Partial<IUser>): Promise<IUser> {
     return await User.findByIdAndUpdate(userId, dto, { new: true });
   }
-  public async getAllUsers(query: IQuery): Promise<IUser[]> {
+  public async getAllUsers(
+    query: IQuery,
+  ): Promise<{ data: IUser[]; total: number }> {
     const skip = query.limit * (query.page - 1);
-    return await User.find().limit(query.limit).skip(skip);
+    const [data, total] = await Promise.all([
+      User.find().limit(query.limit).skip(skip),
+      User.countDocuments(),
+    ]);
+    return { data, total };
   }
   public async searchByParams(query: IQuerySearch): Promise<IUser> {
     const searchObj: FilterQuery<IUser> = {};
@@ -56,12 +63,16 @@ class UserRepository {
     if (query.age) {
       filterObj.age = query.age;
     }
+
     if (query.createdAt) {
-      const start = new Date(query.createdAt);
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(query.createdAt);
-      end.setHours(23, 59, 59, 999);
-      filterObj.createdAt = { $gte: start, $lte: end };
+      if (!regexConstant.CREATED_DATE.test(query.createdAt.toString())) {
+      } else {
+        const start = new Date(query.createdAt);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(query.createdAt);
+        end.setHours(23, 59, 59, 999);
+        filterObj.createdAt = { $gte: start, $lte: end };
+      }
     }
     if (query.email) {
       filterObj.email = { $regex: query.email, $options: "i" };

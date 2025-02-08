@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+import { ObjectSchema } from "joi";
 
 import { ApiError } from "../errors/api.error";
 
 class UserMiddleware {
-  public isBodyValid(validator) {
+  public isBodyValid(validator: ObjectSchema) {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         req.body = await validator.validateAsync(req.body);
@@ -13,7 +14,7 @@ class UserMiddleware {
       }
     };
   }
-  public isQueryValid(validator) {
+  public isQueryValid(validator: ObjectSchema) {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         req.query = await validator.validateAsync(req.query);

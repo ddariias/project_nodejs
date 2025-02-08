@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from "express";
+
 import {
   IQuery,
   IQueryFilterDto,
   IQuerySearch,
 } from "../interfaces/user.interface";
+import { userPresenter } from "../presenters/user.presenter";
 import { userService } from "../services/user.service";
 
 class UserController {
@@ -11,7 +13,8 @@ class UserController {
     try {
       const user = req.body as any;
       const result = await userService.register(user);
-      res.status(201).json(result);
+      const response = userPresenter.shotResponseUser(result);
+      res.status(201).json(response);
     } catch (e) {
       next(e);
     }

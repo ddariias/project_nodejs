@@ -1,7 +1,9 @@
 import { ApiError } from "../errors/api.error";
 import {
   BodyOnSignIn,
-  IQuery, IQueryFilterDto, IQuerySearch,
+  IQuery,
+  IQueryFilterDto,
+  IQuerySearch,
   IResponsePayload,
   IUser,
   IUserRegister,
@@ -60,8 +62,11 @@ class UserService {
     tokenRepository.createToken({ ...tokens, _userId: user._id });
     return { user, tokens };
   }
-  public async getAllUsers(query: IQuery): Promise<IUser[]> {
-    return await userRepository.getAllUsers(query);
+  public async getAllUsers(
+    query: IQuery,
+  ): Promise<{ data: IUser[]; total: number; query: IQuery }> {
+    const { data, total } = await userRepository.getAllUsers(query);
+    return { data, total, query };
   }
   public async searchByParams(query: IQuerySearch): Promise<IUser> {
     return await userRepository.searchByParams(query);
