@@ -2,8 +2,7 @@ import { ApiError } from "../errors/api.error";
 import {
   BodyOnSignIn,
   IQuery,
-  IQueryFilterDto,
-  IQuerySearch,
+  IQueryFilterDto, IQuerySearch,
   IResponsePayload,
   IUser,
   IUserRegister,
@@ -68,8 +67,11 @@ class UserService {
     const { data, total } = await userRepository.getAllUsers(query);
     return { data, total, query };
   }
-  public async searchByParams(query: IQuerySearch): Promise<IUser> {
-    return await userRepository.searchByParams(query);
+  public async searchById(id: string): Promise<IUser> {
+    return await userRepository.searchById(id);
+  }
+  public async searchByEmail(query: IQuerySearch): Promise<IUser> {
+    return await userRepository.searchByEmail(query);
   }
   public async filter(query: IQueryFilterDto): Promise<IUser[]> {
     return await userRepository.filter(query);

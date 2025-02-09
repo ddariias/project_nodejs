@@ -1,3 +1,5 @@
+import { OrderByEnum } from "../enum/order.by.enum";
+import { OrderEnum } from "../enum/order.enum";
 import { TokenPair } from "./token.interface";
 
 export interface IUser {
@@ -12,6 +14,7 @@ export interface IUser {
 
 export type IUserRegister = Pick<IUser, "name" | "email" | "password" | "age">;
 export type BodyOnSignIn = Pick<IUser, "email" | "password">;
+export type IUserGmail = Pick<IUser, "email">;
 
 export interface IResponsePayload {
   user: IUser;
@@ -21,6 +24,8 @@ export interface IResponsePayload {
 export interface IQuery {
   limit: number;
   page: number;
+  order?: OrderEnum;
+  orderBy?: OrderByEnum;
 }
 export interface IQuerySearch {
   search: string;

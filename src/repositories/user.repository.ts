@@ -1,13 +1,14 @@
-import { FilterQuery } from "mongoose";
-import * as mongoose from "mongoose";
+import { FilterQuery, RootFilterQuery, SortOrder } from "mongoose";
 
 import { regexConstant } from "../constants/regex.constant";
+import { OrderByEnum } from "../enum/order.by.enum";
 import { ApiError } from "../errors/api.error";
 import {
   IQuery,
   IQueryFilterDto,
   IQuerySearch,
   IUser,
+  IUserGmail,
   IUserRegister,
 } from "../interfaces/user.interface";
 import { User } from "../models/user.model";
@@ -29,22 +30,49 @@ class UserRepository {
     query: IQuery,
   ): Promise<{ data: IUser[]; total: number }> {
     const skip = query.limit * (query.page - 1);
+
+    const sortObj: { [key: string]: SortOrder } = {};
+    switch (query.orderBy) {
+      case OrderByEnum.AGE:
+        sortObj.age = query.order;
+        break;
+      case OrderByEnum.CREATED_AT:
+        sortObj.createdAt = query.order;
+        break;
+    }
+
     const [data, total] = await Promise.all([
-      User.find().limit(query.limit).skip(skip),
+      User.find().limit(query.limit).skip(skip).sort(sortObj),
       User.countDocuments(),
     ]);
     return { data, total };
   }
-  public async searchByParams(query: IQuerySearch): Promise<IUser> {
-    const searchObj: FilterQuery<IUser> = {};
+  // public async searchByParams(query: IQuerySearch): Promise<IUser> {
+  //   const searchObj: FilterQuery<IUser> = {};
+  //   if (searchObj) {
+  //     if (mongoose.Types.ObjectId.isValid(query.search)) {
+  //       searchObj._id = new mongoose.Types.ObjectId(query.search);
+  //     } else {
+  //       searchObj.email = { $regex: query.search, $options: "i" };
+  //     }
+  //   } else {
+  //     throw new ApiError("Search parameter is missing", 400);
+  //   }
+  //   const user = await User.findOne(searchObj);
+  //   if (!user) {
+  //     throw new ApiError("User not found", 401);
+  //   }
+  //   return user;
+  // }
+  public async searchById(id: string): Promise<IUser> {
+    return await User.findById(id);
+  }
+  public async searchByEmail(query: IQuerySearch): Promise<IUser> {
+    const searchObj: RootFilterQuery<IUserGmail> = {};
     if (searchObj) {
-      if (mongoose.Types.ObjectId.isValid(query.search)) {
-        searchObj._id = new mongoose.Types.ObjectId(query.search);
-      } else {
-        searchObj.email = { $regex: query.search, $options: "i" };
-      }
+      searchObj.email = query.search;
     } else {
-      throw new ApiError("Search parameter is missing", 400);
+      throw new ApiError("No query parameters", 400);
     }
     const user = await User.findOne(searchObj);
     if (!user) {

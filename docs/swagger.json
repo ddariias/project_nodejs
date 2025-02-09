@@ -44,6 +44,32 @@
             "BearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "required": true,
+            "type": "number",
+            "name": "limit"
+          },
+          {
+            "in": "query",
+            "required": true,
+            "type": "number",
+            "name": "page"
+          },
+          {
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "name": "order"
+          },
+          {
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "name": "orderBy"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -213,9 +239,9 @@
         "tags": [
           "users"
         ],
-        "summary": "Search users by params",
+        "summary": "Search users by gmail",
         "description": "This can only be done by the logged in user.",
-        "operationId": "searchByParams",
+        "operationId": "searchByGmail",
         "produces": [
           "application/json",
           "application/xml"
@@ -231,7 +257,52 @@
             "required": true,
             "type": "string",
             "name": "search",
-            "description": "The user with this search param (id or email) will be founded"
+            "description": "The user with this email will be founded"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "400": {
+            "description": "The data is not valid OR Search parameter is missing"
+          },
+          "401": {
+            "description": "User not found"
+          },
+          "403": {
+            "description": "Invalid token or not token pair"
+          }
+        }
+      }
+    },
+    "/search/{userId}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Search users by id",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "searchById",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "userId",
+            "description": "The user with this id will be founded"
           }
         ],
         "responses": {

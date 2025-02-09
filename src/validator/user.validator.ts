@@ -22,9 +22,11 @@ export class UserValidator {
   public static queryValidator = joi.object({
     limit: joi.number().min(1).max(15).default(5),
     page: joi.number().min(1).default(1),
+    orderBy: joi.string().optional(),
+    order: joi.string().optional(),
   });
   public static querySearchValidator = joi.object({
-    search: joi.string(),
+    search: this.email.required(),
   });
   public static queryFilterValidator = joi.object({
     filter: joi.object({

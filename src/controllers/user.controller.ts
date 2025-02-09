@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import {
-  IQuery,
-  IQueryFilterDto,
-  IQuerySearch,
-} from "../interfaces/user.interface";
+import {IQuery, IQueryFilterDto, IQuerySearch} from "../interfaces/user.interface";
 import { userPresenter } from "../presenters/user.presenter";
 import { userService } from "../services/user.service";
 
@@ -37,9 +33,14 @@ class UserController {
     const result = await userService.getAllUsers(query);
     res.status(200).json(result);
   }
-  public async searchByParams(req: Request, res: Response, next: NextFunction) {
+  public async searchById(req: Request, res: Response, next: NextFunction) {
+    const id = req.params.userId;
+    const result = await userService.searchById(id);
+    res.status(200).json(result);
+  }
+  public async searchByEmail(req: Request, res: Response, next: NextFunction) {
     const query = req.query as unknown as IQuerySearch;
-    const result = await userService.searchByParams(query);
+    const result = await userService.searchByEmail(query);
     res.status(200).json(result);
   }
   public async filter(req: Request, res: Response, next: NextFunction) {

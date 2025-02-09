@@ -26,10 +26,16 @@ router.delete(
 );
 router.put("/me", authMiddleware.checkAccessToken, userController.update);
 router.get(
+  "/search/:userId",
+  authMiddleware.checkAccessToken,
+  userMiddleware.isUserIdValid("userId"),
+  userController.searchById,
+);
+router.get(
   "/search",
   authMiddleware.checkAccessToken,
   userMiddleware.isQuerySearchValid(UserValidator.querySearchValidator),
-  userController.searchByParams,
+  userController.searchByEmail,
 );
 router.get(
   "/filter",
